@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  formatDate,
   DateSelectArg,
   EventClickArg,
   EventApi,
