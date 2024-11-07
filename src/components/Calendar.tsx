@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  DateSelectArg,
-  EventClickArg,
-  EventApi,
-  DateSpanApi,
-} from "@fullcalendar/core";
+import { DateSelectArg, EventClickArg, DateSpanApi } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
