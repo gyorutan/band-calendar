@@ -3,9 +3,9 @@ import prisma from "@/lib/db";
 
 export const DELETE = async (
   request: Request,
-  { params }: { params: { reservationId: string } }
+  { params }: { params: Promise<{ reservationId: string }> }
 ) => {
-  const { reservationId } = params;
+  const reservationId = (await params).reservationId;
   console.log({ reservationId });
   const body = await request.json();
 

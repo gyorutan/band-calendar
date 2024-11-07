@@ -135,9 +135,11 @@ const Calendar = () => {
   };
 
   const handleEventClick = async (selected: EventClickArg) => {
+    const reservationId = selected.event.id;
+
     const password = window.prompt("予約Passwordを入力してください。");
     if (password && window.confirm(`この予約を削除してもよろしいですか?`)) {
-      const response = await fetch(`/api/reservation/${selected.event.id}`, {
+      const response = await fetch(`/api/reservation/${reservationId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
