@@ -25,7 +25,6 @@ import { useReservation } from "@/hooks/useReservation";
 import { Loader2 } from "lucide-react";
 
 const Calendar = () => {
-  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [password, setPassword] = useState("");
