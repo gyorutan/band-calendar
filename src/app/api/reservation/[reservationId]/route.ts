@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
-interface Params {
-  reservationId?: string;
-}
-
 export const DELETE = async (
   request: Request,
-  { params }: { params: Params }
+  { params }: { params: { reservationId: string } }
 ) => {
   const { reservationId } = params;
   console.log({ reservationId });
