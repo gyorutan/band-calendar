@@ -201,7 +201,7 @@ const Calendar = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="min-w-[400px] text-xs md:text-base">
+      <div className="min-w-[300px] text-xs md:text-base">
         <FullCalendar
           validRange={{
             start: getTodayInTokyo(), // 일본 표준시 기준으로 오늘 날짜로 시작일 설정
@@ -216,7 +216,6 @@ const Calendar = () => {
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
             left: "prev,next today",
-            center: "title",
             right: "timeGridWeek,timeGridDay",
           }}
           initialView={"timeGridWeek"}
@@ -224,6 +223,7 @@ const Calendar = () => {
           selectable={true}
           selectMirror={true}
           dayMaxEvents={true}
+          selectLongPressDelay={1}
           select={handleDateClick}
           eventClick={handleEventClick}
           key={calendarKey}

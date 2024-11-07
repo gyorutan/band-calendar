@@ -75,6 +75,12 @@ body {
   height: 40px; /* 원하는 높이로 설정 */
 }
 
+@media (max-width: 767px) {
+  .fc .fc-col-header-cell {
+    font-size: 10px; /* 원하는 글자 크기로 설정 */
+  }
+}
+
 @media (min-width: 767px) {
   .fc .fc-timegrid-slot {
     height: 55px; /* 화면 너비가 767px 이하일 때 높이 설정 */
