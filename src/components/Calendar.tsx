@@ -21,6 +21,7 @@ import { Loader2 } from "lucide-react";
 
 const Calendar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [password, setPassword] = useState("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
@@ -85,45 +86,54 @@ const Calendar = () => {
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newEventTitle && selectedDate) {
-      const calendarApi = selectedDate.view.calendar;
-      calendarApi.unselect();
 
-      const newEvent = {
-        id: `${newEventTitle}_${password}_${selectedDate.start.getTime()}`,
-        title: newEventTitle,
-        start: selectedDate?.start,
-        end: selectedDate.end,
-        allDay: selectedDate?.allDay,
-        password: password,
-      };
+    try {
+      setIsSaveLoading(true);
 
-      console.log({ newEvent });
+      if (newEventTitle && selectedDate) {
+        const calendarApi = selectedDate.view.calendar;
+        calendarApi.unselect();
 
-      const response = await fetch("/api/reservation", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(newEvent),
-      });
+        const newEvent = {
+          id: `${newEventTitle}_${password}_${selectedDate.start.getTime()}`,
+          title: newEventTitle,
+          start: selectedDate?.start,
+          end: selectedDate.end,
+          allDay: selectedDate?.allDay,
+          password: password,
+        };
 
-      const data = await response.json();
+        console.log({ newEvent });
 
-      console.log({ data });
+        const response = await fetch("/api/reservation", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newEvent),
+        });
 
-      if (data.success) {
-        alert("予約が正常に完了しました。");
-      } else if (!data.success) {
-        alert(data.message);
+        const data = await response.json();
+
+        console.log({ data });
+
+        if (data.success) {
+          alert("予約が正常に完了しました。");
+        } else if (!data.success) {
+          alert(data.message);
+        }
+
+        await mutate();
+
+        // key를 변경하여 캘린더 강제 리렌더링
+        setCalendarKey((prevKey) => prevKey + 1);
+
+        handleCloseDialog();
       }
-
-      await mutate();
-
-      // key를 변경하여 캘린더 강제 리렌더링
-      setCalendarKey((prevKey) => prevKey + 1);
-
-      handleCloseDialog();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSaveLoading(false);
     }
   };
 
@@ -200,7 +210,7 @@ const Calendar = () => {
   }
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex">
       <div className="min-w-[300px] text-xs md:text-base">
         <FullCalendar
           validRange={{
@@ -233,8 +243,8 @@ const Calendar = () => {
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>新しい予約を作成</DialogTitle>
+          <DialogHeader className="mb-2">
+            <DialogTitle>予約作成</DialogTitle>
           </DialogHeader>
           <form className="flex flex-col space-y-4" onSubmit={handleAddEvent}>
             <input
@@ -254,10 +264,18 @@ const Calendar = () => {
               className="border border-gray-300 p-3 rounded-md text-md"
             />
             <button
-              className="bg-blue-500 transition hover:bg-blue-500/90 text-white p-3 rounded-md"
+              disabled={isSaveLoading}
+              className="bg-blue-500 transition flex justify-center items-center hover:bg-blue-500/90 text-white p-3 rounded-md"
               type="submit"
             >
-              保存
+              {isSaveLoading ? (
+                <div className="flex flex-row gap-x-2">
+                  <Loader2 className="animate-spin" />
+                  <span>少々お待ちください。。。</span>
+                </div>
+              ) : (
+                "予約"
+              )}
             </button>
           </form>
         </DialogContent>
